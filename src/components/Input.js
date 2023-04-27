@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { AiOutlineArrowRight } from "react-icons/ai";
@@ -10,10 +10,10 @@ const Input = ({ socket }) => {
   const [approved, setApproved] = useState(false);
   //entering to the room
   const enterRoom = async () => {
-    setApproved(true);
+     let k = 1;
     await socket.emit("join-room", { room: state.id, name: text });
     await socket.on("room-full", () => {
-      setApproved(false);
+      k=0;
       navigate("/", {
         state: {
           error: "Room is full",
@@ -21,6 +21,7 @@ const Input = ({ socket }) => {
       });
     });
     await socket.on("No-room", () => {
+      k=0;
       setApproved(false);
       console.log("room not exited");
       navigate("/", {
@@ -29,6 +30,12 @@ const Input = ({ socket }) => {
         },
       });
     });
+    if(k){
+    setApproved(true)
+    }
+    
+  };
+  useEffect(()=>{
     if (approved) {
       navigate(`/room/${state.id}`, {
         state: {
@@ -36,8 +43,7 @@ const Input = ({ socket }) => {
         },
       });
     }
-  };
-
+  })
 
   return (
     <AnimatePresence mode="wait">
