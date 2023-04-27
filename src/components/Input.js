@@ -10,8 +10,10 @@ const Input = ({ socket }) => {
   const [approved, setApproved] = useState(false);
   //entering to the room
   const enterRoom = async () => {
+    setApproved(true);
     await socket.emit("join-room", { room: state.id, name: text });
     await socket.on("room-full", () => {
+      setApproved(false);
       navigate("/", {
         state: {
           error: "Room is full",
@@ -19,6 +21,7 @@ const Input = ({ socket }) => {
       });
     });
     await socket.on("No-room", () => {
+      setApproved(false);
       console.log("room not exited");
       navigate("/", {
         state: {
@@ -26,9 +29,6 @@ const Input = ({ socket }) => {
         },
       });
     });
-    setApproved(true);
-  };
-  useEffect(() => {
     if (approved) {
       navigate(`/room/${state.id}`, {
         state: {
@@ -36,7 +36,8 @@ const Input = ({ socket }) => {
         },
       });
     }
-  });
+  };
+
 
   return (
     <AnimatePresence mode="wait">
