@@ -7,7 +7,7 @@ import Header from "./components/Header";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import CreateRoom from "./components/CreateRoom";
-const socket = io.connect("http://localhost:4000");
+const socket = io.connect("https://player-hmqp.onrender.com");
 
 function App() {
   const [players, setPlayers] = useState([]);
